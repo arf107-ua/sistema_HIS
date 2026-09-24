@@ -8,16 +8,21 @@
 </head>
 <body>
   <header>
-    <h1>HIS · Gestión de Agenda</h1>
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 10h-5V5c0-1.1-.9-2-2-2s-2 .9-2 2v5H5c-1.1 0-2 .9-2 2s.9 2 2 2h5v5c0 1.1.9 2 2 2s2-.9 2-2v-5h5c1.1 0 2-.9 2-2s-.9-2-2-2z"/>
+      </svg>
+      <h1>HIS <span>Agenda</span></h1>
+    </div>
     <nav>
-      <a href="/">Buscar</a>
-      <a href="/form.html">Nuevo paciente</a>
-      <a href="/appointments.html">Gestión de citas</a>
-      <a href="/schedules.html">Gestión de agenda</a>
+      <a href="/" class="nav-item"><span class="num">1</span> Buscar Paciente</a>
+      <a href="/form.html" class="nav-item"><span class="num">2</span> Nuevo Paciente</a>
+      <a href="/appointments.html" class="nav-item"><span class="num">3</span> Gestión de Citas</a>
+      <a href="/schedules.html" class="nav-item active"><span class="num">4</span> Gestión de Agenda</a>
     </nav>
   </header>
-  <main>
-    <section class="card">
+  <main class="layout-2col">
+    <section class="card" style="margin-bottom: 0;">
       <h2>Bloquear fechas en la agenda</h2>
       <form id="block-form">
         <label>
@@ -36,29 +41,32 @@
             <option value="WORKING_HOURS">Configuración de Horario</option>
           </select>
         </label>
-        <label>
-          Fecha Inicio:
-          <input type="datetime-local" id="start-date" required />
-        </label>
-        <label>
-          Fecha Fin:
-          <input type="datetime-local" id="end-date" required />
-        </label>
+        <div class="form-row">
+          <label>
+            Fecha Inicio:
+            <input type="datetime-local" id="start-date" required />
+          </label>
+          <label>
+            Fecha Fin:
+            <input type="datetime-local" id="end-date" required />
+          </label>
+        </div>
         <label>
           Duración del hueco (minutos):
           <input type="number" id="duration" value="30" min="5" max="120" required />
         </label>
-        <div class="actions">
-          <button type="submit">Añadir Bloqueo</button>
+        <div class="actions" style="margin-top: 1rem;">
+          <button type="submit" style="width: 100%;">Añadir Bloqueo / Ajuste</button>
         </div>
       </form>
     </section>
-    <section class="card" style="margin-top: 1rem;">
-      <h2>Bloqueos Actuales</h2>
-      <div class="actions" style="margin-bottom: 1rem;">
-        <button type="button" id="btn-load-blocks">Cargar Bloqueos</button>
+    
+    <section class="card" style="margin-bottom: 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="margin: 0;">Bloqueos Actuales</h2>
+        <button type="button" id="btn-load-blocks" class="secondary" style="padding: 0.4rem 0.75rem; font-size: 0.85rem;">Refrescar</button>
       </div>
-      <table>
+      <table style="margin-top: 0;">
         <thead>
           <tr>
             <th>Tipo</th>
@@ -67,7 +75,7 @@
           </tr>
         </thead>
         <tbody id="blocks-body">
-          <tr><td colspan="3" class="muted">Introduce tu ID Admin y haz clic en Cargar</td></tr>
+          <tr><td colspan="3" class="muted">Introduce tu ID Admin a la izquierda y haz clic en Refrescar</td></tr>
         </tbody>
       </table>
     </section>

@@ -9,28 +9,33 @@
 </head>
 <body>
   <header>
-    <h1>HIS <span>Citas</span></h1>
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 10h-5V5c0-1.1-.9-2-2-2s-2 .9-2 2v5H5c-1.1 0-2 .9-2 2s.9 2 2 2h5v5c0 1.1.9 2 2 2s2-.9 2-2v-5h5c1.1 0 2-.9 2-2s-.9-2-2-2z"/>
+      </svg>
+      <h1>HIS <span>Citas</span></h1>
+    </div>
     <nav>
-      <a href="/appointments.html" class="active">Sección Paciente</a>
-      <a href="/schedules.html">Sección Administrador</a>
+      <a href="/" class="nav-item"><span class="num">1</span> Buscar Paciente</a>
+      <a href="/form.html" class="nav-item"><span class="num">2</span> Nuevo Paciente</a>
+      <a href="/appointments.html" class="nav-item active"><span class="num">3</span> Gestión de Citas</a>
+      <a href="/schedules.html" class="nav-item"><span class="num">4</span> Gestión de Agenda</a>
     </nav>
   </header>
-  <main>
-    <h2 style="font-size: 1.5rem; margin-bottom: 2rem;">Reservar Cita</h2>
-    
-    <div class="card">
-      <h2>Identificación</h2>
-      <div class="form-group">
-        <select id="patient-id" required>
-          <option value="">Cargando pacientes...</option>
-        </select>
+  <main class="layout-sidebar">
+    <div class="left-col">
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h2>Identificación</h2>
+        <div class="form-group">
+          <select id="patient-id" required>
+            <option value="">Cargando pacientes...</option>
+          </select>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <h2>Buscar Disponibilidad</h2>
-      <form id="book-form">
-        <div class="form-row">
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h2>Buscar Disponibilidad</h2>
+        <form id="book-form">
           <div class="form-group">
             <label>Especialidad</label>
             <select id="specialty" required>
@@ -50,37 +55,39 @@
             <label>Fecha</label>
             <input type="date" id="date" required />
           </div>
-          <div class="form-group">
-            <button type="button" id="btn-search">Buscar Huecos</button>
+          <div class="form-group" style="margin-top: 0.5rem;">
+            <button type="button" id="btn-search" style="width: 100%;">Buscar Huecos</button>
           </div>
-        </div>
-      </form>
-    </div>
-
-    <div class="card" id="slots-card" style="display: none;">
-      <h2>Huecos Disponibles</h2>
-      <span class="subtitle">Dr. Lopez</span>
-      <div id="slots-container" class="slots-grid"></div>
-    </div>
-
-    <div class="card" style="margin-top: 2rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2 style="margin: 0;">Mis citas</h2>
-        <button type="button" id="btn-load-appointments" style="background: transparent; border: 1px solid var(--border); color: var(--text);">Refrescar</button>
+        </form>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Especialidad</th>
-            <th>Fecha y Hora</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="appointments-body">
-          <tr><td colspan="4" class="muted">Selecciona un paciente arriba.</td></tr>
-        </tbody>
-      </table>
+    </div>
+
+    <div class="right-col">
+      <div class="card" id="slots-card" style="display: none; margin-bottom: 1.5rem;">
+        <h2>Huecos Disponibles</h2>
+        <span class="subtitle">Dr. Lopez</span>
+        <div id="slots-container" class="slots-grid"></div>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 style="margin: 0;">Mis citas</h2>
+          <button type="button" id="btn-load-appointments" class="secondary" style="padding: 0.4rem 0.75rem; font-size: 0.85rem;">Refrescar</button>
+        </div>
+        <table style="margin-top: 0;">
+          <thead>
+            <tr>
+              <th>Especialidad</th>
+              <th>Fecha y Hora</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="appointments-body">
+            <tr><td colspan="4" class="muted">Selecciona un paciente a la izquierda.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
   <script type="module" src="/js/appointments.js"></script>

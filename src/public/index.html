@@ -8,17 +8,22 @@
 </head>
 <body>
   <header>
-    <h1>HIS · Registro e Identificación del Paciente</h1>
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 10h-5V5c0-1.1-.9-2-2-2s-2 .9-2 2v5H5c-1.1 0-2 .9-2 2s.9 2 2 2h5v5c0 1.1.9 2 2 2s2-.9 2-2v-5h5c1.1 0 2-.9 2-2s-.9-2-2-2z"/>
+      </svg>
+      <h1>HIS <span>Clínica</span></h1>
+    </div>
     <nav>
-      <a href="/">Buscar</a>
-      <a href="/form.html">Nuevo paciente</a>
-      <a href="/appointments.html">Gestión de citas</a>
-      <a href="/schedules.html">Gestión de agenda</a>
+      <a href="/" class="nav-item active"><span class="num">1</span> Buscar Paciente</a>
+      <a href="/form.html" class="nav-item"><span class="num">2</span> Nuevo Paciente</a>
+      <a href="/appointments.html" class="nav-item"><span class="num">3</span> Gestión de Citas</a>
+      <a href="/schedules.html" class="nav-item"><span class="num">4</span> Gestión de Agenda</a>
     </nav>
   </header>
 
-  <main>
-    <section class="card">
+  <main class="layout-sidebar">
+    <section class="card" style="margin-bottom: 0;">
       <h2>Buscar y verificar identidad</h2>
       <p class="muted">Introduzca el documento de identidad <strong>o</strong> el código de historia clínica (exactos).</p>
       <form id="search-form">
@@ -30,16 +35,16 @@
           Código de historia clínica
           <input type="text" name="hcCode" placeholder="HC-000001" autocomplete="off" />
         </label>
-        <div class="actions">
-          <button type="submit">Buscar</button>
+        <div class="actions" style="margin-top: 1rem;">
+          <button type="submit" style="width: 100%;">Buscar Paciente</button>
         </div>
         <div id="msg" class="msg" role="status"></div>
       </form>
     </section>
 
-    <section class="card">
-      <h2>Resultados</h2>
-      <table>
+    <section class="card" style="margin-bottom: 0;">
+      <h2 style="margin-bottom: 1rem;">Resultados</h2>
+      <table style="margin-top: 0;">
         <thead>
           <tr>
             <th>Identidad única (id)</th>
