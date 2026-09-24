@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HIS — Gestión de Agenda</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>HIS · Gestión de Agenda</h1>
+    <nav>
+      <a href="/">Buscar</a>
+      <a href="/form.html">Nuevo paciente</a>
+      <a href="/appointments.html">Gestión de citas</a>
+      <a href="/schedules.html">Gestión de agenda</a>
+    </nav>
+  </header>
+  <main>
+    <section class="card">
+      <h2>Bloquear fechas en la agenda</h2>
+      <form id="block-form">
+        <label>
+          ID Administrador (Mock Session):
+          <input type="text" id="admin-id" required placeholder="Ej: admin-123" />
+        </label>
+        <label>
+          ID Especialista:
+          <input type="text" id="specialist-id" required value="SPEC-1" />
+        </label>
+        <label>
+          Tipo de registro:
+          <select id="type" required>
+            <option value="VACATION">Vacaciones (Bloqueo)</option>
+            <option value="SICK_LEAVE">Baja Médica (Bloqueo)</option>
+            <option value="WORKING_HOURS">Configuración de Horario</option>
+          </select>
+        </label>
+        <label>
+          Fecha Inicio:
+          <input type="datetime-local" id="start-date" required />
+        </label>
+        <label>
+          Fecha Fin:
+          <input type="datetime-local" id="end-date" required />
+        </label>
+        <label>
+          Duración del hueco (minutos):
+          <input type="number" id="duration" value="30" min="5" max="120" required />
+        </label>
+        <div class="actions">
+          <button type="submit">Añadir Bloqueo</button>
+        </div>
+      </form>
+    </section>
+    <section class="card" style="margin-top: 1rem;">
+      <h2>Bloqueos Actuales</h2>
+      <div class="actions" style="margin-bottom: 1rem;">
+        <button type="button" id="btn-load-blocks">Cargar Bloqueos</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+          </tr>
+        </thead>
+        <tbody id="blocks-body">
+          <tr><td colspan="3" class="muted">Introduce tu ID Admin y haz clic en Cargar</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <script type="module" src="/js/schedules.js"></script>
+</body>
+</html>

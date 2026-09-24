@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HIS — Alta y edición de paciente</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>HIS · Registro e Identificación del Paciente</h1>
+    <nav>
+      <a href="/">Buscar</a>
+      <a href="/form.html">Nuevo paciente</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2 id="form-title">Alta de paciente</h2>
+      <div id="identity-box" class="muted" hidden></div>
+
+      <form id="patient-form">
+        <label>
+          Tipo de documento
+          <select name="documentType">
+            <option value="DNI">DNI</option>
+            <option value="NIE">NIE</option>
+            <option value="OTHER">Otro</option>
+          </select>
+        </label>
+
+        <label>
+          Documento de identidad <span class="req">*</span>
+          <input type="text" name="documentNumber" placeholder="12345678Z" required autocomplete="off" />
+        </label>
+
+        <label>
+          Nombre <span class="req">*</span>
+          <input type="text" name="firstName" maxlength="80" required autocomplete="given-name" />
+        </label>
+
+        <label>
+          Apellidos <span class="req">*</span>
+          <input type="text" name="lastName" maxlength="120" required autocomplete="family-name" />
+        </label>
+
+        <label>
+          Número de seguro / mutua <span class="req">*</span>
+          <input type="text" name="insuranceNumber" maxlength="40" required autocomplete="off" />
+        </label>
+
+        <label>
+          Aseguradora / mutua
+          <input type="text" name="insurerName" maxlength="80" autocomplete="organization" />
+        </label>
+
+        <label>
+          Fecha de nacimiento
+          <input type="date" name="birthDate" />
+        </label>
+
+        <label>
+          Sexo
+          <select name="sex">
+            <option value="">—</option>
+            <option value="F">F</option>
+            <option value="M">M</option>
+            <option value="O">O</option>
+          </select>
+        </label>
+
+        <label>
+          Teléfono
+          <input type="text" name="phone" placeholder="+34 600 123 456" autocomplete="tel" />
+        </label>
+
+        <label>
+          Email
+          <input type="email" name="email" maxlength="120" autocomplete="email" />
+        </label>
+
+        <label style="grid-column: 1 / -1;">
+          Domicilio
+          <input type="text" name="address" maxlength="200" autocomplete="street-address" />
+        </label>
+
+        <div class="actions">
+          <button type="submit" id="submit-btn">Registrar paciente</button>
+          <a href="/"><button type="button" class="secondary">Volver</button></a>
+        </div>
+
+        <div id="msg" class="msg" role="status"></div>
+      </form>
+    </section>
+  </main>
+
+  <script type="module" src="/form.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  his-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: his-app:latest
+    container_name: his-app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_PATH=/app/data/his.db
+      - NODE_ENV=production
+    volumes:
+      - his_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  his_data:

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HIS — Búsqueda de pacientes</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>HIS · Registro e Identificación del Paciente</h1>
+    <nav>
+      <a href="/">Buscar</a>
+      <a href="/form.html">Nuevo paciente</a>
+      <a href="/appointments.html">Gestión de citas</a>
+      <a href="/schedules.html">Gestión de agenda</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Buscar y verificar identidad</h2>
+      <p class="muted">Introduzca el documento de identidad <strong>o</strong> el código de historia clínica (exactos).</p>
+      <form id="search-form">
+        <label>
+          Documento de identidad
+          <input type="text" name="document" placeholder="12345678Z" autocomplete="off" />
+        </label>
+        <label>
+          Código de historia clínica
+          <input type="text" name="hcCode" placeholder="HC-000001" autocomplete="off" />
+        </label>
+        <div class="actions">
+          <button type="submit">Buscar</button>
+        </div>
+        <div id="msg" class="msg" role="status"></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Resultados</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Identidad única (id)</th>
+            <th>Historia clínica</th>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Contacto</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="results-body">
+          <tr id="empty-row">
+            <td colspan="6" class="muted">Sin resultados todavía.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
