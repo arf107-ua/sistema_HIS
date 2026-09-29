@@ -1,7 +1,22 @@
+import { showMessage, clearMessage } from '../ui.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const blockForm = document.getElementById('block-form');
   const btnLoadBlocks = document.getElementById('btn-load-blocks');
   const blocksBody = document.getElementById('blocks-body');
+  const msgDiv = document.getElementById('msg');
+  
+  const startDateInput = document.getElementById('start-date');
+  const endDateInput = document.getElementById('end-date');
+
+  startDateInput.addEventListener('change', () => {
+    if (startDateInput.value) {
+      endDateInput.min = startDateInput.value;
+      if (endDateInput.value && endDateInput.value < startDateInput.value) {
+        endDateInput.value = startDateInput.value;
+      }
+    }
+  });
 
   blockForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -12,8 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const endDate = document.getElementById('end-date').value;
     const durationMinutes = parseInt(document.getElementById('duration').value, 10);
 
+    clearMessage(msgDiv);
+    
     if (!adminId) {
-      alert('ID de Administrador requerido (Mock Session)');
+      showMessage(msgDiv, 'ID de Administrador requerido (Mock Session)', 'error');
+      return;
+    }
+    
+    if (new Date(startDate) >= new Date(endDate)) {
+      showMessage(msgDiv, 'Error: La fecha de inicio debe ser anterior a la fecha de fin', 'error');
       return;
     }
 
@@ -29,20 +51,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
       
       if (response.ok) {
-        alert('Bloqueo añadido correctamente');
+        showMessage(msgDiv, 'Bloqueo añadido correctamente', 'success');
         btnLoadBlocks.click();
       } else {
-        alert(data.error || 'Error añadiendo bloqueo');
+        showMessage(msgDiv, data.error || 'Error añadiendo bloqueo', 'error');
       }
     } catch (err) {
-      alert('Error de conexión');
+      showMessage(msgDiv, 'Error de conexión', 'error');
     }
   });
 
   btnLoadBlocks.addEventListener('click', async () => {
+    clearMessage(msgDiv);
     const adminId = document.getElementById('admin-id').value;
     if (!adminId) {
-      alert('ID de Administrador requerido');
+      showMessage(msgDiv, 'ID de Administrador requerido', 'error');
       return;
     }
     const specialistId = document.getElementById('specialist-id').value;
@@ -68,10 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
           blocksBody.appendChild(tr);
         });
       } else {
-        alert(data.error || 'Error cargando bloqueos');
+        showMessage(msgDiv, data.error || 'Error cargando bloqueos', 'error');
       }
     } catch (err) {
-      alert('Error de conexión');
+      showMessage(msgDiv, 'Error de conexión', 'error');
     }
   });
 });

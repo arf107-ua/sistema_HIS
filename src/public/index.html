@@ -29,11 +29,13 @@
       <form id="search-form">
         <label>
           Documento de identidad
-          <input type="text" name="document" placeholder="12345678Z" autocomplete="off" />
+          <input type="text" name="document" placeholder="Ej: 12345678Z" autocomplete="off" />
+          <span class="helper-text">Formato con letra al final</span>
         </label>
         <label>
           Código de historia clínica
-          <input type="text" name="hcCode" placeholder="HC-000001" autocomplete="off" />
+          <input type="text" name="hcCode" placeholder="Ej: HC-000001" autocomplete="off" />
+          <span class="helper-text">Identificador único (Ej: HC-XXXXXX)</span>
         </label>
         <div class="actions" style="margin-top: 1rem;">
           <button type="submit" style="width: 100%;">Buscar Paciente</button>
@@ -57,7 +59,16 @@
         </thead>
         <tbody id="results-body">
           <tr id="empty-row">
-            <td colspan="6" class="muted">Sin resultados todavía.</td>
+            <td colspan="6">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <p>No se encontraron resultados</p>
+                <span class="helper-text">Intenta buscar con otro documento o código HC</span>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -65,5 +76,16 @@
   </main>
 
   <script type="module" src="/app.js"></script>
+  <footer>
+    <div class="footer-links">
+      <a href="#">Soporte Técnico</a>
+      <a href="#">Política de Privacidad</a>
+      <a href="#">Términos de Uso</a>
+    </div>
+    <div class="footer-meta">
+      <span>&copy; 2026 HIS Clínica</span>
+      <span>v1.0.0</span>
+    </div>
+  </footer>
 </body>
 </html>

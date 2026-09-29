@@ -28,53 +28,81 @@
       <div id="identity-box" class="muted" hidden></div>
 
       <form id="patient-form">
-        <div class="form-row" style="grid-template-columns: 1fr 2fr;">
-          <label>
-            Tipo de documento
-            <select name="documentType">
-              <option value="DNI">DNI</option>
-              <option value="NIE">NIE</option>
-              <option value="OTHER">Otro</option>
-            </select>
-          </label>
-          <label>
-            Documento de identidad <span class="req">*</span>
-            <input type="text" name="documentNumber" placeholder="12345678Z" required autocomplete="off" />
-          </label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          
+          <!-- Columna Izquierda -->
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <h3 class="section-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              1. Identidad y Registro
+            </h3>
+            <div class="form-row" style="grid-template-columns: 1fr 1.5fr;">
+              <label>
+                Tipo de documento
+                <select name="documentType">
+                  <option value="DNI">DNI</option>
+                  <option value="NIE">NIE</option>
+                  <option value="OTHER">Otro</option>
+                </select>
+              </label>
+              <label>
+                Documento de identidad <span class="req">*</span>
+                <input type="text" name="documentNumber" placeholder="Ej: 12345678Z" required autocomplete="off" />
+                <span class="helper-text">Formato según tipo seleccionado</span>
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label>Nombre <span class="req">*</span><input type="text" name="firstName" maxlength="80" required autocomplete="given-name" /></label>
+              <label>Apellidos <span class="req">*</span><input type="text" name="lastName" maxlength="120" required autocomplete="family-name" /></label>
+            </div>
+
+            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+              <label>Fecha de Nacimiento<input type="date" name="birthDate" /></label>
+              <label>Sexo
+                <select name="sex">
+                  <option value="">—</option>
+                  <option value="F">Femenino (F)</option>
+                  <option value="M">Masculino (M)</option>
+                  <option value="O">Otro (O)</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <!-- Columna Derecha -->
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <h3 class="section-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              2. Datos de Contacto
+            </h3>
+            <div class="form-row" style="grid-template-columns: 1fr 1.5fr;">
+              <label>Teléfono<input type="text" name="phone" placeholder="Ej: +34 600..." autocomplete="tel" /></label>
+              <label>Email<input type="email" name="email" placeholder="Ej: usuario@correo.com" maxlength="120" autocomplete="email" /></label>
+            </div>
+            <label>
+              Domicilio Completo
+              <input type="text" name="address" maxlength="200" placeholder="Ej: Calle Principal 123..." autocomplete="street-address" />
+            </label>
+
+            <h3 class="section-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+              3. Cobertura Médica
+            </h3>
+            <div class="form-row">
+              <label>Número seguro/mutua <span class="req">*</span>
+                <input type="text" name="insuranceNumber" placeholder="Ej: 9988776655" maxlength="40" required autocomplete="off" />
+              </label>
+              <label>Aseguradora/mutua
+                <input type="text" name="insurerName" placeholder="Ej: Sanitas" maxlength="80" autocomplete="organization" />
+              </label>
+            </div>
+          </div>
         </div>
 
-        <div class="form-row">
-          <label>Nombre <span class="req">*</span><input type="text" name="firstName" maxlength="80" required autocomplete="given-name" /></label>
-          <label>Apellidos <span class="req">*</span><input type="text" name="lastName" maxlength="120" required autocomplete="family-name" /></label>
-        </div>
-
-        <div class="form-row">
-          <label>Número seguro/mutua <span class="req">*</span><input type="text" name="insuranceNumber" maxlength="40" required autocomplete="off" /></label>
-          <label>Aseguradora/mutua<input type="text" name="insurerName" maxlength="80" autocomplete="organization" /></label>
-        </div>
-
-        <div class="form-row" style="grid-template-columns: 1fr 0.8fr 1.5fr 2fr;">
-          <label>Nacimiento<input type="date" name="birthDate" /></label>
-          <label>Sexo
-            <select name="sex">
-              <option value="">—</option>
-              <option value="F">F</option>
-              <option value="M">M</option>
-              <option value="O">O</option>
-            </select>
-          </label>
-          <label>Teléfono<input type="text" name="phone" placeholder="+34..." autocomplete="tel" /></label>
-          <label>Email<input type="email" name="email" maxlength="120" autocomplete="email" /></label>
-        </div>
-
-        <label>
-          Domicilio
-          <input type="text" name="address" maxlength="200" autocomplete="street-address" />
-        </label>
-
-        <div class="actions">
+        <div class="actions" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem; justify-content: flex-end;">
+          <a href="/"><button type="button" class="secondary">Cancelar</button></a>
           <button type="submit" id="submit-btn">Registrar paciente</button>
-          <a href="/"><button type="button" class="secondary">Volver</button></a>
         </div>
 
         <div id="msg" class="msg" role="status"></div>
@@ -83,5 +111,16 @@
   </main>
 
   <script type="module" src="/form.js"></script>
+  <footer>
+    <div class="footer-links">
+      <a href="#">Soporte Técnico</a>
+      <a href="#">Política de Privacidad</a>
+      <a href="#">Términos de Uso</a>
+    </div>
+    <div class="footer-meta">
+      <span>&copy; 2026 HIS Clínica</span>
+      <span>v1.0.0</span>
+    </div>
+  </footer>
 </body>
 </html>

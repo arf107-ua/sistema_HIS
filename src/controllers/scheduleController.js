@@ -7,6 +7,9 @@ export function createScheduleController({ scheduleModel }) {
         if (!specialistId || !type || !startDate || !endDate) {
           return res.status(400).json({ error: 'Missing required parameters' });
         }
+        if (new Date(startDate) >= new Date(endDate)) {
+          return res.status(400).json({ error: 'La fecha de inicio debe ser anterior a la fecha de fin' });
+        }
         const block = scheduleModel.addBlock({ specialistId, type, startDate, endDate, durationMinutes });
         res.status(201).json({ block });
       } catch (err) {

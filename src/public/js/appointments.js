@@ -1,3 +1,5 @@
+import { showMessage, clearMessage } from '../ui.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
   const patientSelect = document.getElementById('patient-id');
   const btnSearch = document.getElementById('btn-search');
@@ -5,6 +7,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const slotsCard = document.getElementById('slots-card');
   const appointmentsBody = document.getElementById('appointments-body');
   const btnLoad = document.getElementById('btn-load-appointments');
+  const msgDiv = document.getElementById('msg');
+  
+  let reschedulingAppointmentId = null;
 
   try {
     const res = await fetch('/api/patients');
@@ -32,13 +37,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  const dateInput = document.getElementById('date');
+  const centerInput = document.getElementById('center-id');
+  const specialtyInput = document.getElementById('specialty');
+
+  [dateInput, centerInput, specialtyInput].forEach(input => {
+    input.addEventListener('input', () => {
+      slotsCard.style.display = 'none';
+      slotsContainer.innerHTML = '';
+      if (!reschedulingAppointmentId) {
+        clearMessage(msgDiv);
+      }
+    });
+  });
+
   btnSearch.addEventListener('click', async () => {
-    const specialty = document.getElementById('specialty').value;
-    const centerId = document.getElementById('center-id').value;
-    const date = document.getElementById('date').value;
+    const specialty = specialtyInput.value;
+    const centerId = centerInput.value;
+    const date = dateInput.value;
+
+    if (!reschedulingAppointmentId) {
+      clearMessage(msgDiv);
+    }
 
     if (!specialty || !centerId || !date) {
-      alert('Por favor complete centro, especialidad y fecha');
+      showMessage(msgDiv, 'Por favor complete centro, especialidad y fecha', 'error');
       return;
     }
 
@@ -57,6 +80,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         data.slots.forEach(slot => {
           const btn = document.createElement('button');
           btn.textContent = new Date(slot).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          if (reschedulingAppointmentId) {
+            btn.style.backgroundColor = 'var(--warning, #f59e0b)';
+            btn.style.borderColor = 'var(--warning, #f59e0b)';
+          }
           btn.addEventListener('click', (e) => {
             e.preventDefault();
             bookSlot(slot, centerId, specialty);
@@ -64,17 +91,40 @@ document.addEventListener('DOMContentLoaded', async () => {
           slotsContainer.appendChild(btn);
         });
       } else {
-        alert(data.error || 'Error en la búsqueda');
+        showMessage(msgDiv, data.error || 'Error en la búsqueda', 'error');
       }
     } catch (err) {
-      alert('Error buscando disponibilidad');
+      showMessage(msgDiv, 'Error buscando disponibilidad', 'error');
     }
   });
 
   async function bookSlot(date, centerId, specialty) {
     const patientId = patientSelect.value;
     if (!patientId) {
-      alert('Selecciona un paciente primero en la sección Identificación.');
+      showMessage(msgDiv, 'Selecciona un paciente primero en la sección Identificación.', 'error');
+      return;
+    }
+
+    if (reschedulingAppointmentId) {
+      try {
+        const response = await fetch(`/api/appointments/${reschedulingAppointmentId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-patient-id': patientId },
+          body: JSON.stringify({ newDate: date })
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+          reschedulingAppointmentId = null;
+          showMessage(msgDiv, 'Cita reprogramada con éxito', 'success');
+          btnSearch.click(); 
+          btnLoad.click(); 
+        } else {
+          showMessage(msgDiv, data.error || 'Error reprogramando la cita', 'error');
+        }
+      } catch (err) {
+        showMessage(msgDiv, 'Error de conexión reprogramando cita', 'error');
+      }
       return;
     }
 
@@ -90,13 +140,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       const data = await response.json();
       
       if (response.ok) {
+        showMessage(msgDiv, 'Cita reservada con éxito', 'success');
         btnSearch.click(); 
         btnLoad.click(); 
       } else {
-        alert(data.error || 'Error reservando la cita');
+        showMessage(msgDiv, data.error || 'Error reservando la cita', 'error');
       }
     } catch (err) {
-      alert('Error de conexión reservando cita');
+      showMessage(msgDiv, 'Error de conexión reservando cita', 'error');
     }
   }
 
@@ -155,31 +206,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnLoad.click();
       } else {
         const data = await response.json();
-        alert(data.error || 'Error cancelando');
+        showMessage(msgDiv, data.error || 'Error cancelando', 'error');
       }
     } catch (err) {
-      alert('Error de conexión');
+      showMessage(msgDiv, 'Error de conexión', 'error');
     }
   };
 
   window.rescheduleAppointment = async (id) => {
-    const newDateStr = prompt('Introduce nueva fecha y hora (YYYY-MM-DDTHH:MM)', '2026-10-23T10:00');
-    if (!newDateStr) return;
-    const patientId = patientSelect.value;
-    try {
-      const response = await fetch(`/api/appointments/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-patient-id': patientId },
-        body: JSON.stringify({ newDate: newDateStr })
-      });
-      if (response.ok) {
-        btnLoad.click();
-      } else {
-        const data = await response.json();
-        alert(data.error || 'Error reprogramando');
-      }
-    } catch (err) {
-      alert('Error de conexión');
-    }
+    reschedulingAppointmentId = id;
+    
+    msgDiv.innerHTML = `
+      <strong>Modo Reprogramación Activo</strong>: Por favor, busque la nueva fecha deseada arriba y seleccione una hora para trasladar esta cita.
+      <button id="btn-cancel-reschedule" style="margin-left: 10px; padding: 0.2rem 0.5rem; font-size: 0.8rem; background: transparent; border: 1px solid white; color: white;">Cancelar</button>
+    `;
+    msgDiv.className = 'msg show success';
+    msgDiv.style.backgroundColor = 'var(--warning, #f59e0b)';
+    msgDiv.style.color = 'white';
+    
+    document.getElementById('btn-cancel-reschedule').addEventListener('click', () => {
+      reschedulingAppointmentId = null;
+      clearMessage(msgDiv);
+      msgDiv.style.backgroundColor = '';
+      msgDiv.style.color = '';
+      if (slotsCard.style.display === 'block') btnSearch.click();
+    });
+
+    dateInput.focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 });
