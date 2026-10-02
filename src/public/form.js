@@ -34,17 +34,23 @@ function fillForm(patient) {
 
 function showIdentity(patient, prefix) {
   identityBox.hidden = false;
-  identityBox.textContent = '';
-  const line = document.createElement('div');
-  line.append(prefix);
-  const idCode = document.createElement('code');
-  idCode.className = 'identidad';
-  idCode.textContent = patient.id;
-  const hcCode = document.createElement('code');
-  hcCode.className = 'identidad';
-  hcCode.textContent = patient.hcCode;
-  line.append(idCode, ' · Historia clínica: ', hcCode);
-  identityBox.appendChild(line);
+  
+  identityBox.innerHTML = `
+    <div class="identity-content" style="flex-direction: row; align-items: center; padding: 1rem 1.5rem;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      <div class="identity-badges" style="margin: 0; padding: 0; background: transparent; border: none; flex-direction: row; align-items: center; gap: 1.5rem; box-shadow: none;">
+        <div class="badge-group">
+          <span class="badge-label">Identidad Única</span>
+          <code class="identidad">${patient.id}</code>
+        </div>
+        <div class="badge-divider"></div>
+        <div class="badge-group">
+          <span class="badge-label">Historia Clínica</span>
+          <code class="identidad">${patient.hcCode}</code>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 async function loadForEdit() {
@@ -60,7 +66,7 @@ async function loadForEdit() {
     }
     currentPatient = payload;
     fillForm(payload);
-    showIdentity(payload, 'Identidad única: ');
+    showIdentity(payload, 'Datos del paciente');
     showMessage(msg, 'Paciente cargado. Modifique los datos que desee actualizar.', 'success');
   } catch {
     showMessage(msg, 'No se pudo cargar el paciente.', 'error');

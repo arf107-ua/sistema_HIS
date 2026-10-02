@@ -1,4 +1,4 @@
-import { showMessage, clearMessage } from '../ui.js';
+import { showMessage, clearMessage, addYearDropdown } from '../ui.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const patientSearch = document.getElementById('patient-search');
@@ -290,6 +290,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           altFormat: "d/m/Y",
           dateFormat: "Y-m-d",
           minDate: "today",
+          onReady: function(selectedDates, dateStr, instance) {
+            addYearDropdown(instance, new Date().getFullYear(), new Date().getFullYear() + 10);
+          },
           onChange: async (selectedDates, dateStr) => {
             if (!dateStr) return;
             slotsContainer.innerHTML = '<p class="muted" style="grid-column: 1/-1; text-align: center;">Buscando...</p>';
