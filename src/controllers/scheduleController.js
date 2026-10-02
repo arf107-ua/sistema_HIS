@@ -25,6 +25,17 @@ export function createScheduleController({ scheduleModel }) {
       } catch (err) {
         next(err);
       }
+    },
+    async deleteBlock(req, res, next) {
+      try {
+        const { id } = req.params;
+        const specialistId = req.query.specialistId || 'SPEC-1';
+        if (!id) return res.status(400).json({ error: 'Missing id' });
+        scheduleModel.deleteBlock(id, specialistId);
+        res.json({ success: true });
+      } catch (err) {
+        res.status(400).json({ error: err.message });
+      }
     }
   };
 }

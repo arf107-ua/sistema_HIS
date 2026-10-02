@@ -22,7 +22,7 @@ description: "Task list template for feature implementation"
 
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
-- [x] T002 Implementar el esquema SQL (tablas de Citas, Agendas y Bloqueos) en `src/db/schema.sql`
+- [x] T002 Implementar el esquema SQL (tablas de Citas, Agendas y Bloqueos) en `src/db/schema.sql` (incluyendo control de concurrencia optimista y duración por defecto de 30 min)
 - [x] T003 [P] Configurar el archivo central de base de datos (conexiones/pools) si no está centralizado.
 - [x] T004 Asegurar que el middleware de sesión y la identidad del paciente (Práctica 1) están disponibles en `src/app.js`
 
@@ -38,10 +38,12 @@ description: "Task list template for feature implementation"
 
 ### Implementation for User Story 1
 
-- [x] T005 [P] [US1] Crear `src/models/appointmentModel.js` con métodos para consultar disponibilidad y crear cita
+- [x] T005 [P] [US1] Crear `src/models/appointmentModel.js` con métodos para consultar disponibilidad y crear cita (usando bloqueo optimista)
+- [x] T005b [P] [US1] Implementar validación de regla de negocio BR-001 (máximo 1 cita activa por especialidad al día por paciente)
 - [x] T006 [P] [US1] Implementar el controlador en `src/controllers/appointmentController.js` para los endpoints GET (búsqueda) y POST (reserva)
 - [x] T007 [US1] Definir rutas en `src/routes/appointmentRoutes.js` y montarlas en `src/app.js`
 - [x] T008 [US1] Implementar la interfaz de usuario de búsqueda y reserva en `src/public/index.html` y lógica en `src/public/js/appointments.js`
+- [x] T008b [US1] Implementar Pruebas Independientes (Jest) para búsqueda y reserva validando el ID de paciente
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -55,10 +57,11 @@ description: "Task list template for feature implementation"
 
 ### Implementation for User Story 2
 
-- [x] T009 [P] [US2] Agregar lógica transaccional de reprogramación (actualización atómica) y cancelación a `src/models/appointmentModel.js`
+- [x] T009 [P] [US2] Agregar lógica transaccional de reprogramación (actualización atómica) y cancelación a `src/models/appointmentModel.js` (validando margen de 24h)
 - [x] T010 [P] [US2] Agregar métodos de edición y borrado en `src/controllers/appointmentController.js`
 - [x] T011 [US2] Agregar endpoints PUT y DELETE en `src/routes/appointmentRoutes.js`
 - [x] T012 [US2] Extender el frontend en `src/public/index.html` y `src/public/js/appointments.js` para mostrar citas actuales y permitir su modificación
+- [x] T012b [US2] Implementar Pruebas Independientes (Jest) para reprogramación y cancelación asegurando retención de cita original
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -76,7 +79,9 @@ description: "Task list template for feature implementation"
 - [x] T014 [P] [US3] Crear `src/controllers/scheduleController.js` para administrar configuraciones
 - [x] T015 [US3] Crear `src/routes/scheduleRoutes.js` y montarlas en `src/app.js`
 - [x] T016 [US3] Actualizar la consulta de disponibilidad en `src/models/appointmentModel.js` para excluir las fechas bloqueadas por `scheduleModel`
+- [x] T016b [US3] Implementar cambio de estado a "requiere reprogramación" y notificación simulada en consola para citas preexistentes afectadas por un nuevo bloqueo
 - [x] T017 [US3] Crear la vista de administración en `src/public/index.html` y su lógica en `src/public/js/schedules.js`
+- [x] T017c [US3] Implementar Pruebas Independientes (Jest) para bloqueo de fechas e impacto en disponibilidad
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -102,3 +107,11 @@ description: "Task list template for feature implementation"
 - **User Story 1**: Depends on Foundational.
 - **User Story 2**: Depends on User Story 1 (needs existing appointments to modify).
 - **User Story 3**: Independent of US1/US2 for configuration, but US1 searching needs to integrate US3's rules (Task T016).
+
+## Phase 6: Convergence
+
+- [x] T020 Añadir columna `version` a la tabla `appointments` en `schema.sql` per T002 (partial)
+- [x] T021 Implementar bloqueo optimista con `version` en los métodos de creación y actualización de `appointmentModel.js` per T005/T009 (partial)
+- [x] T022 Añadir validación estricta de 24 horas de antelación para cancelar o reprogramar citas en `appointmentModel.js` per BR-002 (partial)
+- [x] T023 Modificar `scheduleModel.js` para detectar citas afectadas por nuevos bloqueos, cambiar su estado a "requiere reprogramación" y notificar por consola per T016b (missing)
+- [x] T024 Implementar las Pruebas Independientes en Jest para los flujos de US1, US2 y US3 per T008b/T012b/T017c (missing)

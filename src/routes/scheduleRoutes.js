@@ -10,6 +10,7 @@ export function createScheduleRouter(db) {
 
   router.post('/blocks', requireAdminSession, controller.addBlock);
   router.get('/blocks', requireAdminSession, controller.getBlocks);
+  router.delete('/blocks/:id', requireAdminSession, controller.deleteBlock);
 
   return router;
 }

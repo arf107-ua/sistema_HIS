@@ -14,9 +14,9 @@ El módulo de programación de citas permite a los pacientes reservar, cancelar 
 
 **Primary Dependencies**: Express.js (presumiblemente para el backend en `app.js`).
 
-**Storage**: Base de datos SQL (presumiblemente SQLite/MySQL/PostgreSQL basándonos en `schema.sql`).
+**Storage**: Base de datos SQL (presumiblemente SQLite/MySQL/PostgreSQL basándonos en `schema.sql`). La duración estándar de los intervalos es de 30 minutos.
 
-**Testing**: Framework de pruebas estándar JS (e.g. Jest) [NEEDS CLARIFICATION].
+**Testing**: Framework de pruebas estándar JS (Jest) configurado para validación de escenarios de aceptación.
 
 **Target Platform**: Navegadores Web y Contenedores Docker (multi-stage).
 
@@ -24,7 +24,7 @@ El módulo de programación de citas permite a los pacientes reservar, cancelar 
 
 **Performance Goals**: Resultados de disponibilidad precisos en menos de 2 segundos.
 
-**Constraints**: Las operaciones de reprogramación deben ser estrictamente atómicas (transacciones DB).
+**Constraints**: Las operaciones de reprogramación deben ser estrictamente atómicas (transacciones DB). Control de concurrencia mediante bloqueo optimista. Cancelaciones/reprogramaciones limitadas a 24h de antelación. Notificaciones a pacientes por bloqueos simuladas por consola.
 
 **Scale/Scope**: Módulo de gestión para HIS integrado en entorno local o de desarrollo.
 

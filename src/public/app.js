@@ -50,13 +50,21 @@ window.addEventListener('DOMContentLoaded', () => {
         const tr = document.createElement('tr');
 
         const idTd = document.createElement('td');
-        const idCode = document.createElement('code');
-        idCode.className = 'identidad';
-        idCode.textContent = patient.id;
-        idTd.appendChild(idCode);
+        const idBadge = document.createElement('span');
+        idBadge.className = 'readonly-badge';
+        idBadge.textContent = patient.id.split('-')[0] + '...'; // truncate UUID for aesthetics
+        idBadge.title = patient.id; // full UUID on hover
+        idTd.appendChild(idBadge);
 
         const hcTd = document.createElement('td');
-        setCell(hcTd, patient.hcCode);
+        if (patient.hcCode) {
+          const hcBadge = document.createElement('span');
+          hcBadge.className = 'readonly-badge';
+          hcBadge.textContent = patient.hcCode;
+          hcTd.appendChild(hcBadge);
+        } else {
+          setCell(hcTd, null);
+        }
 
         const nameTd = document.createElement('td');
         setCell(nameTd, `${patient.firstName} ${patient.lastName}`);

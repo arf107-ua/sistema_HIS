@@ -6,6 +6,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const blocksBody = document.getElementById('blocks-body');
   const msgDiv = document.getElementById('msg');
   
+  const cancelModal = document.getElementById('cancel-modal');
+  const btnCancelYes = document.getElementById('btn-cancel-yes');
+  const btnCancelNo = document.getElementById('btn-cancel-no');
+  let blockToCancel = null;
+
+  if (btnCancelNo && cancelModal) {
+    btnCancelNo.addEventListener('click', () => {
+      cancelModal.style.display = 'none';
+      blockToCancel = null;
+    });
+  }
+
+  if (btnCancelYes && cancelModal) {
+    btnCancelYes.addEventListener('click', async () => {
+      if (!blockToCancel) return;
+      cancelModal.style.display = 'none';
+      
+      const adminId = document.getElementById('admin-id').value;
+      const specialistId = document.getElementById('specialist-id').value;
+      const id = blockToCancel;
+
+      try {
+        const response = await fetch(`/api/schedules/blocks/${id}?specialistId=${specialistId}`, {
+          method: 'DELETE',
+          headers: { 'x-admin-id': adminId }
+        });
+        if (response.ok) {
+          btnLoadBlocks.click();
+        } else {
+          const data = await response.json();
+          showMessage(msgDiv, data.error || 'Error quitando bloqueo', 'error');
+        }
+      } catch (err) {
+        showMessage(msgDiv, 'Error de conexión', 'error');
+      }
+    });
+  }
+
   const startDateInput = document.getElementById('start-date');
   const endDateInput = document.getElementById('end-date');
 
@@ -78,15 +116,25 @@ document.addEventListener('DOMContentLoaded', () => {
       if (response.ok) {
         blocksBody.innerHTML = '';
         if (data.blocks.length === 0) {
-          blocksBody.innerHTML = '<tr><td colspan="3" class="muted">No hay bloqueos.</td></tr>';
+          blocksBody.innerHTML = '<tr><td colspan="4" class="muted">No hay bloqueos.</td></tr>';
           return;
         }
         data.blocks.forEach(block => {
+          const typeMap = {
+            'VACATION': 'Vacaciones',
+            'SICK_LEAVE': 'Baja Médica',
+            'WORKING_HOURS': 'Horario Laboral'
+          };
+          const displayType = typeMap[block.type] || block.type;
+          
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${block.type}</td>
+            <td>${displayType}</td>
             <td>${new Date(block.start_date).toLocaleString()}</td>
             <td>${new Date(block.end_date).toLocaleString()}</td>
+            <td>
+              <button onclick="removeBlock('${block.id}')" class="danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: var(--danger); border: none; color: white;">Quitar</button>
+            </td>
           `;
           blocksBody.appendChild(tr);
         });
@@ -97,4 +145,15 @@ document.addEventListener('DOMContentLoaded', () => {
       showMessage(msgDiv, 'Error de conexión', 'error');
     }
   });
+
+  window.removeBlock = (id) => {
+    const adminId = document.getElementById('admin-id').value;
+    if (!adminId) {
+      showMessage(msgDiv, 'ID de Administrador requerido', 'error');
+      return;
+    }
+    
+    blockToCancel = id;
+    if (cancelModal) cancelModal.style.display = 'flex';
+  };
 });

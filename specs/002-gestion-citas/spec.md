@@ -11,6 +11,14 @@
 ## Objetivo y Contexto de Negocio
 El módulo de programación de citas médicas forma parte del Sistema de Información de Gestión Hospitalaria (HIS). Su propósito es proporcionar una herramienta centralizada y eficiente para la gestión de agendas médicas, permitiendo a los pacientes reservar, cancelar o reprogramar citas de manera autónoma, y al personal administrativo o especialistas gestionar la disponibilidad de sus horarios. Este módulo reutilizará la identidad única del paciente generada en el módulo de registro anterior (Práctica 1).
 
+## Clarifications
+
+### Session 2026-10-01
+- Q: ¿Cuál es el límite de tiempo exacto para permitir cancelaciones o reprogramaciones por parte del paciente? (BR-002) → A: 24 horas antes del inicio de la cita
+- Q: ¿Cómo se debe implementar la notificación cuando un bloqueo de agenda afecta a citas ya confirmadas? → A: Simular notificación (ej. logs/consola) y cambiar el estado en BBDD
+- Q: ¿Cuál es la duración estándar (por defecto) de un hueco de cita médica si el especialista no la ajusta manualmente? → A: 30 minutos
+- Q: ¿Cómo se debe implementar técnicamente el control de concurrencia para evitar dobles reservas en el mismo hueco? → A: Bloqueo optimista (optimistic locking) mediante control de versiones en BBDD
+
 ## Usuarios
 - **Paciente**: Usuario registrado previamente en el sistema (con identidad única) que accede para autogestionar sus citas (búsqueda, reserva, reprogramación, cancelación).
 - **Personal Administrativo / Especialista**: Usuario encargado de configurar la agenda médica, bloqueando franjas horarias por vacaciones, bajas o ajustando la duración estándar de los huecos para la atención.
@@ -56,8 +64,8 @@ Como Personal Administrativo, quiero bloquear franjas horarias y ajustar la dura
 2. **Dado** la configuración de un especialista, **Cuando** se ajusta la duración de la consulta a 30 minutos, **Entonces** los huecos disponibles reflejan esa nueva duración para futuras reservas.
 
 ### Casos Límite
-- ¿Qué ocurre si dos pacientes intentan reservar el mismo hueco exacto al mismo tiempo? (El sistema debe garantizar la concurrencia, asignando la cita solo al primero que confirma y notificando al otro).
-- ¿Qué sucede si se bloquea por baja una franja horaria en la que ya existían citas confirmadas? (El sistema debe notificar al personal o a los pacientes, dejando las citas en estado "requiere reprogramación" y bloqueando el hueco para futuras reservas).
+- ¿Qué ocurre si dos pacientes intentan reservar el mismo hueco exacto al mismo tiempo? (El sistema debe garantizar la concurrencia mediante bloqueo optimista en la BBDD, asignando la cita solo al primero que confirma y notificando al otro).
+- ¿Qué sucede si se bloquea por baja una franja horaria en la que ya existían citas confirmadas? (El sistema simulará la notificación mediante logs/consola, dejará las citas afectadas en estado "requiere reprogramación", y bloqueará el hueco para futuras reservas).
 
 ## Requisitos *(obligatorio)*
 
@@ -66,11 +74,11 @@ Como Personal Administrativo, quiero bloquear franjas horarias y ajustar la dura
 - **FR-002**: El sistema DEBE garantizar que toda reserva, modificación o cancelación de cita esté estrictamente asociada a la identidad única del paciente (creada en el módulo de registro).
 - **FR-003**: El sistema DEBE permitir iniciar un flujo de reprogramación manteniendo el bloqueo y estado de la cita original hasta la confirmación final de la nueva cita.
 - **FR-004**: El sistema DEBE permitir al personal administrativo configurar bloqueos en la agenda por motivos de vacaciones, enfermedad o baja.
-- **FR-005**: El sistema DEBE permitir establecer o ajustar la duración base de los huecos de atención en la agenda de cada especialista.
+- **FR-005**: El sistema DEBE permitir establecer o ajustar la duración base de los huecos de atención en la agenda de cada especialista (valor por defecto: 30 minutos).
 
 ### Reglas de Negocio
 - **BR-001**: Un paciente no puede tener dos citas activas para la misma especialidad en el mismo día.
-- **BR-002**: Las reprogramaciones y cancelaciones por parte del paciente solo están permitidas hasta cierto margen de tiempo (ej. 24 horas) antes del inicio de la cita.
+- **BR-002**: Las reprogramaciones y cancelaciones por parte del paciente solo están permitidas hasta 24 horas antes del inicio de la cita.
 - **BR-003**: La transacción de reprogramación debe ser atómica; si hay un fallo de red o el usuario cancela, se retiene la cita original sin modificaciones.
 
 ### Entidades Clave

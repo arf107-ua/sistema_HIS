@@ -42,8 +42,13 @@ CREATE TABLE IF NOT EXISTS appointments (
   center_id TEXT NOT NULL,
   specialty TEXT NOT NULL,
   appointment_date TEXT NOT NULL,
-  status TEXT NOT NULL CHECK (status IN ('CONFIRMED', 'CANCELLED', 'RESCHEDULED', 'COMPLETED')),
+  status TEXT NOT NULL CHECK (status IN ('CONFIRMED', 'CANCELLED', 'RESCHEDULED', 'COMPLETED', 'REQUIRES_RESCHEDULE')),
+  version INTEGER DEFAULT 0,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
   FOREIGN KEY(patient_id) REFERENCES patients(id)
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_appointment_slot 
+  ON appointments (specialist_id, appointment_date) 
+  WHERE status = 'CONFIRMED';
